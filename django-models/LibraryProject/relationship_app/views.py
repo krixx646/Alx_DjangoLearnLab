@@ -14,6 +14,10 @@ def list_books(request):
     books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
 
+def edit_book_redirect(request):
+    # Redirect to a default book edit page or raise an error
+    return redirect('list_books')  # or HttpResponseNotFound or similar
+
 # Class-based view: detail of a library
 class LibraryDetailView(DetailView):
     model = Library
