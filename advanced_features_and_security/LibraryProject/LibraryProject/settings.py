@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bookshelf.apps.BookshelfConfig',
-    'accounts.apps.AccountsConfig',
+    # 'accounts.apps.AccountsConfig',  # Removed to fix user model conflict
 ]
 
 MIDDLEWARE = [
@@ -128,7 +128,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom user model
-AUTH_USER_MODEL = 'accounts.CustomUser'
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
 # Login and logout redirect URLs
 LOGIN_REDIRECT_URL = 'list_books'
