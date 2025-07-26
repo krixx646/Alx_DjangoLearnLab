@@ -30,16 +30,31 @@ DEBUG = False  # Change to True only during development
 # Set allowed hosts for production
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-# Enable browser-side XSS filter
-SECURE_BROWSER_XSS_FILTER = True
+# HTTPS and Secure Redirects Configuration
+# Redirect all non-HTTPS requests to HTTPS
+SECURE_SSL_REDIRECT = True
+
+# HTTP Strict Transport Security (HSTS)
+# Instruct browsers to only access the site via HTTPS for one year
+SECURE_HSTS_SECONDS = 31536000  # 1 year in seconds
+# Include all subdomains in the HSTS policy
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# Allow preloading of HSTS policy
+SECURE_HSTS_PRELOAD = True
+
+# Secure Cookie Settings
+# Ensure session cookies are only sent over HTTPS
+SESSION_COOKIE_SECURE = True
+# Ensure CSRF cookies are only sent over HTTPS
+CSRF_COOKIE_SECURE = True
+
+# Secure Headers
 # Prevent the site from being rendered in a frame (clickjacking protection)
 X_FRAME_OPTIONS = 'DENY'
 # Prevent the browser from guessing content types
 SECURE_CONTENT_TYPE_NOSNIFF = True
-# Ensure CSRF cookies are only sent over HTTPS
-CSRF_COOKIE_SECURE = True
-# Ensure session cookies are only sent over HTTPS
-SESSION_COOKIE_SECURE = True
+# Enable browser-side XSS filter
+SECURE_BROWSER_XSS_FILTER = True
 
 
 # Application definition
