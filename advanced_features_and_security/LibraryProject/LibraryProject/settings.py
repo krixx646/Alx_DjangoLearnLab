@@ -34,6 +34,9 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 # Redirect all non-HTTPS requests to HTTPS
 SECURE_SSL_REDIRECT = True
 
+# Trust the X-Forwarded-Proto header from the proxy
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # HTTP Strict Transport Security (HSTS)
 # Instruct browsers to only access the site via HTTPS for one year
 SECURE_HSTS_SECONDS = 31536000  # 1 year in seconds

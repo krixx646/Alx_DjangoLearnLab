@@ -195,6 +195,9 @@ It should include SSL settings and security headers:
     ProxyPass / http://127.0.0.1:8000/
     ProxyPassReverse / http://127.0.0.1:8000/
     
+    # Set X-Forwarded-Proto header to https for Django's SECURE_PROXY_SSL_HEADER
+    RequestHeader set X-Forwarded-Proto "https"
+    
     # Security headers to complement Django settings
     Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
     Header always set X-Content-Type-Options nosniff

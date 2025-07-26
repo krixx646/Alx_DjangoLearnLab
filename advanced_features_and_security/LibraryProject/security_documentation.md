@@ -12,6 +12,9 @@ This document outlines the security measures implemented in our Django applicati
 # Redirect all non-HTTPS requests to HTTPS
 SECURE_SSL_REDIRECT = True
 
+# Trust the X-Forwarded-Proto header from the proxy
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # HTTP Strict Transport Security (HSTS)
 # Instruct browsers to only access the site via HTTPS for one year
 SECURE_HSTS_SECONDS = 31536000  # 1 year in seconds
@@ -23,6 +26,7 @@ SECURE_HSTS_PRELOAD = True
 
 **Explanation:**
 - `SECURE_SSL_REDIRECT`: Forces all non-HTTPS requests to be redirected to HTTPS, ensuring all communication is encrypted.
+- `SECURE_PROXY_SSL_HEADER`: Tells Django to trust the X-Forwarded-Proto header from the proxy server. This is essential when running behind a reverse proxy that terminates SSL, as it allows Django to determine if the original request was HTTPS.
 - `SECURE_HSTS_SECONDS`: Implements HTTP Strict Transport Security (HSTS) which tells browsers to only use HTTPS for our domain for the specified time period (1 year).
 - `SECURE_HSTS_INCLUDE_SUBDOMAINS`: Extends the HSTS policy to all subdomains, providing comprehensive protection.
 - `SECURE_HSTS_PRELOAD`: Allows the site to be included in browser preload lists, ensuring HTTPS is used even on first visit.
