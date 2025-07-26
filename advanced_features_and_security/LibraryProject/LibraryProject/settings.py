@@ -23,9 +23,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-9ix79rpsgsws_zp(016%#2ko7o@-qlgr!ukk6@(xosrrcd$!mk'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# SECURITY BEST PRACTICES
+# Set DEBUG to False in production to avoid leaking sensitive information
+DEBUG = False  # Change to True only during development
 
-ALLOWED_HOSTS = []
+# Set allowed hosts for production
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+# Enable browser-side XSS filter
+SECURE_BROWSER_XSS_FILTER = True
+# Prevent the site from being rendered in a frame (clickjacking protection)
+X_FRAME_OPTIONS = 'DENY'
+# Prevent the browser from guessing content types
+SECURE_CONTENT_TYPE_NOSNIFF = True
+# Ensure CSRF cookies are only sent over HTTPS
+CSRF_COOKIE_SECURE = True
+# Ensure session cookies are only sent over HTTPS
+SESSION_COOKIE_SECURE = True
 
 
 # Application definition
