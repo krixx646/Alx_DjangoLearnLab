@@ -4,7 +4,7 @@ from .serializers import AuthorSerializer, BookSerializer
 from rest_framework import generics
 from .permissions import IsOwnerOrAdmin
 
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, IsAdminUser, AllowAny
 
 
 
