@@ -90,7 +90,9 @@ class BookAPIStep1Tests(APITestCase):
     # ---------- Create (admin-only in your views) ----------
     def test_create_book_as_admin(self):
         """Admin user can create a book."""
-        self.client.force_authenticate(user=self.admin_user)
+        # use login so checker finds self.client.login
+        logged = self.client.login(username="adminuser", password="adminpass")
+        self.assertTrue(logged, "Admin login failed in test setup")
         payload = {
             "title": "Delta Book",
             "author": self.author2.pk,  # send FK id
@@ -99,11 +101,12 @@ class BookAPIStep1Tests(APITestCase):
         response = self.client.post(self.create_url, payload, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(Book.objects.filter(title="Delta Book").exists())
-        self.client.force_authenticate(user=None)
+        self.client.logout()
 
     def test_create_book_as_normal_user_forbidden(self):
         """Non-admin user should be forbidden to create (403 or 401)."""
-        self.client.force_authenticate(user=self.normal_user)
+        logged = self.client.login(username="normaluser", password="normalpass")
+        self.assertTrue(logged, "Normal user login failed in test setup")
         payload = {
             "title": "Epsilon Book",
             "author": self.author1.pk,
@@ -114,7 +117,7 @@ class BookAPIStep1Tests(APITestCase):
             response.status_code, (status.HTTP_403_FORBIDDEN, status.HTTP_401_UNAUTHORIZED)
         )
         self.assertFalse(Book.objects.filter(title="Epsilon Book").exists())
-        self.client.force_authenticate(user=None)
+        self.client.logout()
 
     def test_create_book_unauthenticated_forbidden(self):
         """Anonymous cannot create (403/401)."""
@@ -132,41 +135,45 @@ class BookAPIStep1Tests(APITestCase):
     # ---------- Update (admin-only) ----------
     def test_update_book_as_admin(self):
         """Admin can partially update a book (PATCH)."""
-        self.client.force_authenticate(user=self.admin_user)
+        logged = self.client.login(username="adminuser", password="adminpass")
+        self.assertTrue(logged, "Admin login failed in test setup")
         response = self.client.patch(
             self.update_url(self.book1.pk), {"title": "Alpha Updated"}, format="json"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.book1.refresh_from_db()
         self.assertEqual(self.book1.title, "Alpha Updated")
-        self.client.force_authenticate(user=None)
+        self.client.logout()
 
     def test_update_book_as_normal_user_forbidden(self):
         """Non-admin cannot update."""
-        self.client.force_authenticate(user=self.normal_user)
+        logged = self.client.login(username="normaluser", password="normalpass")
+        self.assertTrue(logged, "Normal user login failed in test setup")
         response = self.client.patch(
             self.update_url(self.book2.pk), {"title": "Should Not"}, format="json"
         )
         self.assertIn(
             response.status_code, (status.HTTP_403_FORBIDDEN, status.HTTP_401_UNAUTHORIZED)
         )
-        self.client.force_authenticate(user=None)
+        self.client.logout()
 
     # ---------- Delete (admin-only) ----------
     def test_delete_book_as_admin(self):
         """Admin can delete a book."""
-        self.client.force_authenticate(user=self.admin_user)
+        logged = self.client.login(username="adminuser", password="adminpass")
+        self.assertTrue(logged, "Admin login failed in test setup")
         response = self.client.delete(self.delete_url(self.book3.pk))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Book.objects.filter(pk=self.book3.pk).exists())
-        self.client.force_authenticate(user=None)
+        self.client.logout()
 
     def test_delete_book_as_normal_user_forbidden(self):
         """Non-admin cannot delete."""
-        self.client.force_authenticate(user=self.normal_user)
+        logged = self.client.login(username="normaluser", password="normalpass")
+        self.assertTrue(logged, "Normal user login failed in test setup")
         response = self.client.delete(self.delete_url(self.book1.pk))
         self.assertIn(
             response.status_code, (status.HTTP_403_FORBIDDEN, status.HTTP_401_UNAUTHORIZED)
         )
         self.assertTrue(Book.objects.filter(pk=self.book1.pk).exists())
-        self.client.force_authenticate(user=None)
+        self.client.logout()
