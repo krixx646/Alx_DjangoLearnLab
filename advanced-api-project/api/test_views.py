@@ -1,15 +1,16 @@
 # /api/test_views.py
 
-from django.test import TestCase
+# /api/test_views.py
+
+from rest_framework.test import APITestCase, APIClient
 from django.urls import reverse
-from rest_framework.test import APIClient
 from rest_framework import status
 from django.contrib.auth.models import User
 
 from .models import Author, Book
 
 
-class BookAPIStep1Tests(TestCase):
+class BookAPIStep1Tests(APITestCase):
     def setUp(self):
         # Users
         self.admin_user = User.objects.create_user(
@@ -19,12 +20,11 @@ class BookAPIStep1Tests(TestCase):
             username="normaluser", password="normalpass", is_staff=False
         )
 
-        # Authors (assuming Author has a 'name' field)
+        # Authors
         self.author1 = Author.objects.create(name="Author One")
         self.author2 = Author.objects.create(name="Author Two")
 
         # Books
-        # Make titles and years distinct for filtering/search/ordering tests
         self.book1 = Book.objects.create(
             title="Alpha Book", author=self.author1, publication_year=2000
         )
@@ -35,10 +35,11 @@ class BookAPIStep1Tests(TestCase):
             title="Gamma Book", author=self.author1, publication_year=2005
         )
 
-        # Client
-        self.client = APIClient()
+        # API client (APITestCase already provides self.client = APIClient())
+        # optional explicit client:
+        # self.client = APIClient()
 
-        # URL helpers (names must match your urls.py names)
+        # URL helpers
         self.list_url = reverse("book-list")
         self.create_url = reverse("book-create")
         self.detail_url = lambda pk: reverse("book-detail", kwargs={"pk": pk})
