@@ -1,0 +1,478 @@
+/* Basic reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Header and Navigation */
+header {
+    background-color: #ffffff;
+    padding: 15px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+header nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo a {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2d3748;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.logo a:hover {
+    color: #5e41e0;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 200;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px 0;
+    background-color: #333;
+    transition: all 0.3s ease;
+}
+
+header nav ul {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+}
+
+header nav ul li {
+    margin: 0 15px;
+}
+
+header nav ul li a {
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+header nav ul li a:hover,
+header nav ul li a.hover-effect {
+    color: #5e41e0;
+}
+
+/* Main Content */
+main.content {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* Hero Section */
+.hero {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.hero h1 {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #2d3748;
+}
+
+.hero p {
+    font-size: 18px;
+    color: #4a5568;
+    max-width: 700px;
+    margin: 0 auto 40px;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-primary {
+    background-color: #5e41e0;
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #4930c4;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(94, 65, 224, 0.2);
+}
+
+.btn-secondary {
+    background-color: #f1f1f1;
+    color: #333;
+    margin-left: 15px;
+}
+
+.btn-secondary:hover {
+    background-color: #e5e5e5;
+}
+
+/* Blog Posts */
+.posts-list {
+    margin-top: 40px;
+}
+
+.posts-list h1 {
+    font-size: 32px;
+    margin-bottom: 30px;
+    color: #2d3748;
+}
+
+.posts-list ul {
+    list-style-type: none;
+}
+
+.posts-list li {
+    background: white;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.posts-list li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+.posts-list li a {
+    font-size: 24px;
+    color: #2d3748;
+    text-decoration: none;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.posts-list li small {
+    color: #718096;
+    display: block;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.posts-list li p {
+    color: #4a5568;
+    line-height: 1.7;
+}
+
+/* Post Detail */
+.post-detail {
+    max-width: 800px;
+    margin: 40px auto;
+    background: white;
+    border-radius: 8px;
+    padding: 40px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.post-detail h1 {
+    font-size: 36px;
+    color: #2d3748;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.post-meta {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.post-meta p {
+    color: #718096;
+    font-size: 16px;
+}
+
+.post-content {
+    font-size: 18px;
+    line-height: 1.8;
+    color: #4a5568;
+    margin-bottom: 40px;
+}
+
+.post-content p {
+    margin-bottom: 20px;
+}
+
+.post-actions {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    gap: 15px;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.pagination a {
+    padding: 8px 16px;
+    margin: 0 5px;
+    border-radius: 4px;
+    background-color: #5e41e0;
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.pagination a:hover {
+    background-color: #4930c4;
+}
+
+.pagination span {
+    padding: 8px 16px;
+    color: #718096;
+}
+
+/* Messages */
+.messages {
+    margin-bottom: 30px;
+}
+
+.message {
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.message.success {
+    background-color: #c6f6d5;
+    color: #276749;
+}
+
+.message.error {
+    background-color: #fed7d7;
+    color: #9b2c2c;
+}
+
+.message.info {
+    background-color: #bee3f8;
+    color: #2c5282;
+}
+
+/* Forms and Auth */
+.auth-container {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    max-width: 500px;
+    margin: 60px auto;
+    text-align: center;
+}
+
+.auth-container h2 {
+    color: #2d3748;
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.auth-links {
+    margin-top: 25px;
+    font-size: 14px;
+    color: #718096;
+}
+
+.auth-links a {
+    color: #5e41e0;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.auth-links a:hover {
+    color: #4930c4;
+    text-decoration: underline;
+}
+
+form {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #2d3748;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+form textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+form button {
+    background-color: #5e41e0;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+form button:hover {
+    background-color: #4930c4;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 30px 0;
+    background-color: #2d3748;
+    color: white;
+    margin-top: 80px;
+}
+
+footer p {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 36px;
+    }
+    
+    .hero p {
+        font-size: 16px;
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+    
+    .posts-list li a {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+    
+    header nav ul {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 70%;
+        height: 100vh;
+        background-color: white;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 80px 30px 30px;
+        transition: right 0.3s ease;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    header nav ul.active {
+        right: 0;
+    }
+    
+    header nav ul li {
+        margin: 15px 0;
+        width: 100%;
+    }
+    
+    header nav ul li a {
+        font-size: 18px;
+        display: block;
+    }
+}
+
+@media (max-width: 480px) {
+    header nav {
+        padding: 0 15px;
+    }
+    
+    header nav ul {
+        width: 85%;
+        padding: 80px 20px 30px;
+    }
+    
+    .hero {
+        padding: 40px 20px;
+    }
+    
+    .hero h1 {
+        font-size: 28px;
+    }
+    
+    .btn {
+        display: block;
+        margin: 10px auto;
+        width: 80%;
+    }
+    
+    .btn-secondary {
+        margin-left: auto;
+    }
+}

@@ -1,0 +1,32 @@
+{% extends 'blog/base.html' %}
+{% block title %}Welcome to My Django Blog{% endblock %}
+
+{% block content %}
+<div class="hero">
+  <h1>Welcome to My Django Blog</h1>
+  <p>Discover amazing content, connect with our community, and explore everything we have to offer. We're glad you're here!</p>
+  <div class="hero-buttons">
+    <a href="{% url 'posts' %}" class="btn btn-primary">Get Started</a>
+    <a href="#" class="btn btn-secondary">Learn More</a>
+  </div>
+</div>
+
+<div class="posts-list">
+  <h2>Latest Posts</h2>
+  <ul>
+    {% for post in posts %}
+      <li>
+        <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a>
+        <small>by {{ post.author }} — {{ post.published_date }}</small>
+        <p>{{ post.content|truncatechars:200 }}</p>
+      </li>
+    {% empty %}
+      <li>No posts yet.</li>
+    {% endfor %}
+  </ul>
+  
+  <div class="view-all">
+    <a href="{% url 'posts' %}" class="btn btn-primary">View All Posts</a>
+  </div>
+</div>
+{% endblock %}
