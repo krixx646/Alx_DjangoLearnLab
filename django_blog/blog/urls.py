@@ -5,11 +5,11 @@ from . import views
 urlpatterns = [
     # site & posts (using names your templates expect)
     path('', views.PostListView.as_view(), name='home'),           # Home -> posts list
-    path('posts/', views.PostListView.as_view(), name='posts'),
-    path('posts/new/', views.PostCreateView.as_view(), name='post_create'),
-    path('posts/<int:pk>/', views.PostDetailView.as_view(), name='post_detail'),
-    path('posts/<int:pk>/update/', views.PostUpdateView.as_view(), name='post_update'),
-    path('posts/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post_delete'),
+    path('post/', views.PostListView.as_view(), name='posts'),
+    path('post/new/', views.PostCreateView.as_view(), name='post_create'),
+    path('post/<int:pk>/', views.PostDetailView.as_view(), name='post_detail'),
+    path('post/<int:pk>/edit/', views.PostUpdateView.as_view(), name='post_update'),
+    path('post/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post_delete'),
 
     # auth/profile (these should match the names used in your base.html)
     path('register/', views.signup_view, name='register'),
