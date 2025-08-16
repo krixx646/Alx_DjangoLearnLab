@@ -3,6 +3,7 @@ from .email import EmailAddForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from .models import Profile, Post, Comment, Tag
+from taggit.forms import TagWidget  
 
 from django.contrib.auth.forms import UserCreationForm
 
@@ -55,6 +56,7 @@ class PostForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 8}),
+            'tags': TagWidget(attrs={'class': 'form-control'})
         }
 
 
