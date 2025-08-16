@@ -34,20 +34,24 @@ header nav ul li a {
 
 .content {
     margin: 20px;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 20px;
 }
 
-/* Form Styles */
+footer {
+    text-align: center;
+    margin-top: 50px;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+}
+
+/* Authentication Forms Styling */
 form {
     max-width: 500px;
     margin: 0 auto;
     padding: 20px;
     background-color: #fff;
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
 form h2 {
@@ -55,26 +59,38 @@ form h2 {
     color: #333;
 }
 
-.form-control {
-    width: 100%;
-    padding: 10px;
+form p {
     margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
 }
 
-form button {
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+form button[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
     background-color: #333;
     color: white;
     border: none;
-    padding: 10px 20px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
 }
 
-form button:hover {
+form button[type="submit"]:hover {
     background-color: #555;
 }
 
@@ -98,10 +114,19 @@ form button:hover {
     color: #721c24;
 }
 
-footer {
-    text-align: center;
-    margin-top: 50px;
-    padding: 10px;
-    background-color: #333;
-    color: white;
+/* Form validation styles */
+.error-input {
+    border: 1px solid #dc3545 !important;
+    background-color: #fff8f8;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 5px;
+}
+
+/* Transition for messages */
+.message {
+    transition: opacity 0.5s ease-in-out;
 }
