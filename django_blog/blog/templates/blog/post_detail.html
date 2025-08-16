@@ -1,16 +1,72 @@
 {% extends 'blog/base.html' %}
-{% block title %}{{ object.title }}{% endblock %}
+{% load static %}
+
+{# use object if available, otherwise post (keeps compatibility with different view context_object_name) #}
+{% with post=object|default:post %}
+{% block title %}{{ post.title }}{% endblock %}
+
 {% block content %}
 <article>
-  <h1>{{ object.title }}</h1>
-  <p>By {{ object.author }} — {{ object.published_date }}</p>
-  <div>{{ object.content|linebreaks }}</div>
+  <h1>{{ post.title }}</h1>
+  <p>By {{ post.author }} — {{ post.published_date|date:"M d, Y H:i" }}</p>
+  <div>{{ post.content|linebreaks }}</div>
 
-  {% if user == object.author %}
+  {% if user == post.author %}
     <p>
-      <a href="{% url 'post_update' object.pk %}">Edit</a> |
-      <a href="{% url 'post_delete' object.pk %}">Delete</a>
+      <a href="{% url 'post_update' post.pk %}">Edit</a> |
+      <a href="{% url 'post_delete' post.pk %}">Delete</a>
     </p>
   {% endif %}
 </article>
+
+<hr>
+
+<section id="comments">
+  <h2>Comments ({{ post.comments.count }})</h2>
+
+  {% if post.comments.exists %}
+    <ul class="comment-list">
+      {% for comment in post.comments.all %}
+        <li class="comment">
+          <p>
+            <strong>{{ comment.author.username }}</strong>
+            <small> — {{ comment.created_at|date:"M d, Y H:i" }}</small>
+          </p>
+          <div class="comment-body">{{ comment.content|linebreaks }}</div>
+
+          {% if user.is_authenticated and user == comment.author %}
+            <p class="comment-actions">
+              <a href="{% url 'comment_update' post.pk comment.pk %}">Edit</a> |
+              <a href="{% url 'comment_delete' post.pk comment.pk %}">Delete</a>
+            </p>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No comments yet. Be the first to comment!</p>
+  {% endif %}
+</section>
+
+<hr>
+
+<section id="add-comment">
+  {% if user.is_authenticated %}
+    <h3>Leave a comment</h3>
+    <form method="post" action="{% url 'comment_create' post.pk %}">
+      {% csrf_token %}
+      {# the view should provide 'comment_form' in context (see snippet below) #}
+      {% if comment_form %}
+        {{ comment_form.as_p }}
+      {% else %}
+        <p><textarea name="content" rows="4" class="form-control" placeholder="Write a comment..."></textarea></p>
+      {% endif %}
+      <button type="submit">Post comment</button>
+    </form>
+  {% else %}
+    <p><a href="{% url 'login' %}">Log in</a> to leave a comment.</p>
+  {% endif %}
+</section>
 {% endblock %}
+
+{% endwith %}

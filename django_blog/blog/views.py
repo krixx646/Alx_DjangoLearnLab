@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import SignupForm, LoginForm, ProfileForm, PostForm
-from .models import Profile, Post
+from .forms import SignupForm, LoginForm, ProfileForm, PostForm, CommentForm
+from .models import Profile, Post, Comment
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -86,6 +86,13 @@ class PostDetailView(DetailView):
     template_name = 'blog/post_detail.html'
     context_object_name = 'post'
 
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        post = self.object  # the Post instance
+        ctx['comments'] = post.comments.select_related('author').all()
+        ctx['comment_form'] = CommentForm()
+        return ctx
+
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
@@ -123,3 +130,47 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author
+
+# Create comment (nested under a post)
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_form.html'  # fallback page for form errors (we post from detail page)
+
+    def form_valid(self, form):
+        post_pk = self.kwargs.get('post_pk')
+        post = Post.objects.get(pk=post_pk)
+        form.instance.author = self.request.user
+        form.instance.post = post
+        response = super().form_valid(form)
+        # redirect back to the post detail page after successful comment
+        return redirect('post_detail', pk=post.pk)
+
+    def form_invalid(self, form):
+        # On invalid form, render a simple page showing errors (optional)
+        return self.render_to_response(self.get_context_data(form=form))
+
+# Edit comment (author only)
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_form.html'
+
+    def get_success_url(self):
+        return reverse('post_detail', kwargs={'pk': self.object.post.pk})
+
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.author
+
+# Delete comment (author only)
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    template_name = 'blog/comment_confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse_lazy('post_detail', kwargs={'pk': self.object.post.pk})
+
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.author
