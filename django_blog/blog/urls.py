@@ -17,7 +17,10 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('profile/', views.profile_view, name='profile'),
     
-    path('post/<int:pk>/comments/new/', views.comment_create, name='comment_create'),
-    path('comment/<int:pk>/update/', views.comment_update, name='comment_update'),
-    path('comment/<int:pk>/delete/', views.comment_delete, name='comment_delete'),
+    path('post/<int:pk>/comments/new/', views.CommentCreateView.as_view(), name='comment_create'),
+    path('comment/<int:pk>/update/', views.CommentUpdateView.as_view(), name='comment_update'),
+    path('comment/<int:pk>/delete/', views.CommentDeleteView.as_view(), name='comment_delete'),
+
+    path("search/", views.SearchResultsView.as_view(), name="search_results"),
+    path("tags/<str:tag_name>/", views.TagPostListView.as_view(), name="tag_posts"),
 ]

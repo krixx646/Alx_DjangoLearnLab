@@ -11,6 +11,15 @@
   <p>By {{ post.author }} — {{ post.published_date|date:"M d, Y H:i" }}</p>
   <div>{{ post.content|linebreaks }}</div>
 
+  <!-- 🔖 Show tags for this post -->
+  <p><strong>Tags:</strong>
+    {% for tag in post.tags.all %}
+      <a href="{% url 'tag_posts' tag.name %}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+    {% empty %}
+      No tags
+    {% endfor %}
+  </p>
+
   {% if user == post.author %}
     <p>
       <a href="{% url 'post_update' post.pk %}">Edit</a> |

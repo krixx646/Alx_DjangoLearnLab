@@ -2,7 +2,8 @@ from django import forms
 from .email import EmailAddForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
-from .models import Profile, Post, Comment
+from .models import Profile, Post, Comment, Tag
+
 from django.contrib.auth.forms import UserCreationForm
 
 
@@ -41,9 +42,16 @@ class ProfileForm(forms.ModelForm):
 
 
 class PostForm(forms.ModelForm):
-    class Meta:
+       tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        required=False,
+        widget=forms.CheckboxSelectMultiple
+    )
+
+       class Meta:
         model = Post
-        fields = ['title', 'content']
+        fields = ['title', 'content', 'tags']
+
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 8}),
