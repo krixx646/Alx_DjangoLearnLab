@@ -21,7 +21,7 @@ class UserRegistration(serializers.ModelSerializer):
 
      def create(self, validated_data):
         validated_data.pop('confirm_password')  # remove before creating user
-        user = User.objects.create_user(
+        user = get_user_model().objects.create_user(
             username=validated_data['username'],
             email=validated_data.get('email'),
             password=validated_data['password']
