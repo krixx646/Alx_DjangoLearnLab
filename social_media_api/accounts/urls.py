@@ -8,4 +8,5 @@ router.register(r'users', UserRegistrationView, basename='user')
 urlpatterns = [
     path('', include(router.urls)),
     path('login/', LoginApiView.as_view(), name='login'),
+    path('register/', include),
 ]
