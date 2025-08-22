@@ -1,9 +1,10 @@
 from .models import User
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 from rest_framework.authtoken.models import Token
 
+User = get_user_model()
 
 class UserRegistration(serializers.ModelSerializer):
      password = serializers.CharField(write_only=True)
