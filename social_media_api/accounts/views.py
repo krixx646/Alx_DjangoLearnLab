@@ -9,6 +9,7 @@ from rest_framework.views import APIView as ApiView
 from rest_framework.authtoken.models import Token
 from django.contrib import messages
 from rest_framework.views import APIView
+from rest_framework import serializers, generics, permissions
 
 
 # Create your views here.
@@ -96,6 +97,10 @@ class followApiView(APIView):
             return Response({"message": f"You are now following {user_to_follow.username}."}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+class UnfollowApiView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]       
 
     def delete(self, request, user_id):
         try:
