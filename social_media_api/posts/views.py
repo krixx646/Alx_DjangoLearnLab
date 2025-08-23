@@ -7,6 +7,8 @@ from .serializers import PostSerializer, CommentSerializer, LikeSerializer, Emoj
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import serializers
+from rest_framework import generics, permissions
+from rest_framework.views import APIView
 # Create your views here.
 
 
@@ -148,5 +150,6 @@ class FeedView(generics.ListAPIView):
         user = self.request.user
         # Assuming you have a 'followers' ManyToManyField on your User model
         following_users = user.following.all()
-        return Post.objects.filter(author__in=following_users)  
+        return Post.objects.filter(author__in=following_users).order_by('-created_at')  
     
+
