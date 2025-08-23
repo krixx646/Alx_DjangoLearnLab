@@ -11,7 +11,7 @@ urlpatterns = [
     path('login/', LoginApiView.as_view(), name='login'),
     path('register/', include),
     path('followers/', ListFollowers.as_view(), name='followers'),
-    path('follow/<int:user_id>', followApiView.as_view(), name='follow'),
-    path('unfollow/<int:user_id>', UnfollowApiView.as_view(), name='unfollow'),
-    path('following/<int:user_id>', PeopleYouFollowView.as_view(), name='following')
+    path('follow/<int:user_id>/', followApiView.as_view(), name='follow'),
+    path('unfollow/<int:user_id>/', UnfollowApiView.as_view(), name='unfollow'),
+    path('following/<int:user_id>/', PeopleYouFollowView.as_view(), name='following')
 ]
