@@ -4,6 +4,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework.authtoken.models import Token
 
+
 User = get_user_model()
 
 class UserRegistration(serializers.ModelSerializer):
@@ -78,5 +79,21 @@ class LoginSerializer(serializers.Serializer):
         if user and user.is_active:
             return user
         raise serializers.ValidationError("Invalid credentials")
+    
+
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    followers = serializers.SerializerMethodField()
+    following = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'bio', 'profile_picture', 'followers', 'following']
+
+    def get_followers(self, obj):
+        return [follower.username for follower in obj.followers.all()]
+
+    def get_following(self, obj):
+        return [followed.username for followed in obj.following.all()]
     
 

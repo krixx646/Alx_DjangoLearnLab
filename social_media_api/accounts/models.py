@@ -25,6 +25,14 @@ class User(AbstractUser):
     def is_following(self, user):
         """Check if following"""
         return self.followers.filter(id=user.id).exists()
+    
+    def follower_count(self):
+        """Return number of followers"""
+        return self.followers.count()
+    
+    def following_list(self):
+        """Return list of users this user is following"""
+        return self.following.all()
 
     def is_followed_by(self, user):
         """Check if user is followed by someone"""

@@ -111,7 +111,7 @@ class EmojiViewSet(viewsets.ModelViewSet):
     filterset_fields = ['name', 'post', 'user']      # exact filtering
     search_fields = ['name']        # partial search
     ordering_fields = ['created_at']   # fields you can sort by
-    
+
 
     def get_permissions(self):
         if self.action in ['retrieve', 'update', 'partial_update', 'destroy']:
@@ -132,3 +132,21 @@ class EmojiViewSet(viewsets.ModelViewSet):
             instance.delete()
         else:
             raise serializers.ValidationError("You can only delete your own reactions.")
+        
+
+class FeedView(generics.ListAPIView):
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['title', 'author']      # exact filtering
+    search_fields = ['title', 'content']        # partial search
+    ordering_fields = ['created_at', 'likes']   # fields you can sort by
+    ordering = ['-created_at']
+
+    def get_queryset(self):
+        user = self.request.user
+        # Assuming you have a 'followers' ManyToManyField on your User model
+        following_users = user.following.all()
+        return Post.objects.filter(author__in=following_users)  
+    
