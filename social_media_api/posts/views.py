@@ -34,7 +34,9 @@ class PostViewSet(viewsets.ModelViewSet):
         return super().get_permissions()
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        post = serializer.save(author=self.request.user)
+
+     
 
     def perform_update(self, serializer):
         serializer = PostSerializer(data=self.request.data)
@@ -48,7 +50,8 @@ class PostViewSet(viewsets.ModelViewSet):
             instance.delete()
         else:
             raise serializers.ValidationError("You can only delete your own posts.")
-        
+    
+       
 
     @action(detail=True, methods=['post'])
     def like(self, request, pk=None):
@@ -194,3 +197,31 @@ class PostUnlikeView(generics.GenericAPIView):
         post = Post.objects.get(pk=pk)
         post.likes.remove(request.user)
         return Response({"message": "Post unliked"}, status=status.HTTP_200_OK)
+    
+
+#GARBAGE BELOW, DELETE LATER IF NOT NEEDED
+
+class LikePostView(generics.GenericAPIView):
+    def post(self, request, pk):
+        post = generics.get_object_or_404(Post, pk=pk)
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+
+        if created and request.user != post.author:
+            Notification.objects.create(
+                recipient=post.author,
+                actor=request.user,
+                verb="liked",
+                target=post
+            )
+
+        return Response({"status": "post liked"}, status=status.HTTP_200_OK)
+
+class UnlikePostView(generics.GenericAPIView):
+    def post(self, request, pk):
+        post = generics.get_object_or_404(Post, pk=pk)
+        try:
+            like = Like.objects.get(user=request.user, post=post)
+            like.delete()
+            return Response({"status": "post unliked"}, status=status.HTTP_200_OK)
+        except Like.DoesNotExist:
+            return Response({"status": "like not found"}, status=status.HTTP_400_BAD_REQUEST)
