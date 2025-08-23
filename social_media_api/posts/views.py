@@ -9,6 +9,9 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework import serializers
 from rest_framework import generics, permissions
 from rest_framework.views import APIView
+from rest_framework.decorators import action
+from notifications.models import Notification
+from notifications.utils import create_notification
 # Create your views here.
 
 
@@ -45,6 +48,27 @@ class PostViewSet(viewsets.ModelViewSet):
             instance.delete()
         else:
             raise serializers.ValidationError("You can only delete your own posts.")
+        
+
+    @action(detail=True, methods=['post'])
+    def like(self, request, pk=None):
+        post = self.get_object()
+        post.likes.add(request.user)
+
+        if request.user != post.author:
+            create_notification(
+                recipient=post.author,
+                actor=request.user,
+                verb="liked",
+                target=post
+            )
+        return Response({"status": "post liked"}, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def unlike(self, request, pk=None):
+        post = self.get_object()
+        post.likes.remove(request.user)
+        return Response({"status": "post unliked"}, status=status.HTTP_200_OK)
 
 
 
@@ -153,3 +177,20 @@ class FeedView(generics.ListAPIView):
         return Post.objects.filter(author__in=following_users).order_by('-created_at')  
     
 
+class PostLikeView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        # forward to your existing like logic
+        post = Post.objects.get(pk=pk)
+        post.likes.add(request.user)
+        return Response({"message": "Post liked"}, status=status.HTTP_200_OK)
+
+
+class PostUnlikeView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        post = Post.objects.get(pk=pk)
+        post.likes.remove(request.user)
+        return Response({"message": "Post unliked"}, status=status.HTTP_200_OK)
