@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,9 +24,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-ovnd+$6g)vx%1qqbzheqb@5$%aip&b4_k5+0&^((tl&%e0srv8')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = ['your-app-name.herokuapp.com', 'localhost', '127.0.0.1']
+# Hosts/CSRF configured for Render and local dev; can be overridden via env
+_default_allowed_hosts = ['localhost', '127.0.0.1', '.onrender.com']
+ALLOWED_HOSTS = [h for h in os.environ.get('ALLOWED_HOSTS', '').split(',') if h] or _default_allowed_hosts
+
+# Render provides external URL/hostname; trust it for CSRF if present
+CSRF_TRUSTED_ORIGINS = [o for o in os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',') if o]
+if not CSRF_TRUSTED_ORIGINS:
+    _render_external_url = os.environ.get('RENDER_EXTERNAL_URL')
+    if _render_external_url:
+        CSRF_TRUSTED_ORIGINS = [_render_external_url]
 
 
 # Application definition
@@ -48,6 +58,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -79,7 +90,6 @@ WSGI_APPLICATION = 'social_media_api.wsgi.application'
 
 # Database
 # Use PostgreSQL on Render, fallback to SQLite locally
-import os
 import dj_database_url
 
 DATABASES = {
@@ -124,6 +134,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Efficient static file serving in production
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -160,6 +174,9 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 # Prevent your site from being embedded in iframes
 X_FRAME_OPTIONS = 'DENY'
 
-# Force HTTPS (you can enable this later after Heroku SSL setup)
-SECURE_SSL_REDIRECT = True
+# Respect HTTPS via reverse proxy headers (Render)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Force HTTPS in production (set DEBUG=false to avoid redirect loops locally)
+SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'True').lower() == 'true'
 SESSION_COOKIE_SECURE = True

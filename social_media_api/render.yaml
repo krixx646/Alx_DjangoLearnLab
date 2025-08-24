@@ -2,12 +2,24 @@ services:
   - type: web
     name: social-media-api
     env: python
-    buildCommand: "pip install -r requirements.txt"
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput"
     startCommand: "gunicorn social_media_api.wsgi:application"
+    preDeployCommand: "python manage.py migrate --noinput"
     envVars:
       - key: PYTHON_VERSION
-        value: 3.13
+        value: 3.12
       - key: DJANGO_SECRET_KEY
-        value: "django-insecure-ovnd+$6g)vx%1qqbzheqb@5$%aip&b4_k5+0&^((tl&%e0srv8"
+        generateValue: true
+      - key: DEBUG
+        value: False
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com,localhost,127.0.0.1"
+      - key: SECURE_SSL_REDIRECT
+        value: True
       - key: DATABASE_URL
-        value: "REPLACE_ME_WITH_RENDER_POSTGRES_URL"
+        fromDatabase:
+          name: social-media-db
+          property: connectionString
+databases:
+  - name: social-media-db
+    databaseName: api_social_rest
