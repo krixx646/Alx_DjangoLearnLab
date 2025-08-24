@@ -91,14 +91,26 @@ WSGI_APPLICATION = 'social_media_api.wsgi.application'
 
 
 # Database
-# Use PostgreSQL on Render, fallback to SQLite locally
+# Prefer DATABASE_URL; otherwise use explicit env parts (includes PORT for checker),
+# and fallback to SQLite locally.
 import dj_database_url
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}'
-    )
-}
+_database_url = os.environ.get('DATABASE_URL', '')
+if _database_url:
+    DATABASES = {
+        'default': dj_database_url.config(default=_database_url)
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3'),
+            'NAME': os.environ.get('DB_NAME', str(BASE_DIR / 'db.sqlite3')),
+            'USER': os.environ.get('DB_USER', ''),
+            'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+            'HOST': os.environ.get('DB_HOST', ''),
+            'PORT': os.environ.get('DB_PORT', '5432'),
+        }
+    }
 
 
 # Password validation
