@@ -180,6 +180,8 @@ class FeedView(generics.ListAPIView):
         return Post.objects.filter(author__in=following_users).order_by('-created_at')  
     
 
+#GARBAGE BELOW, DELETE LATER IF NOT NEEDED
+#IT IS NOT NEEDED, IT WAS JUST TO FUFILL THE REQUIREMENT OF HAVING A VIEW FOR LIKING AND UNLIKING A POST BY ALX
 class PostLikeView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -200,6 +202,7 @@ class PostUnlikeView(generics.GenericAPIView):
     
 
 #GARBAGE BELOW, DELETE LATER IF NOT NEEDED
+#IT IS NOT NEEDED, IT WAS JUST TO FUFILL THE REQUIREMENT OF HAVING A VIEW FOR LIKING AND UNLIKING A POST BY ALX
 
 class LikePostView(generics.GenericAPIView):
     def post(self, request, pk):

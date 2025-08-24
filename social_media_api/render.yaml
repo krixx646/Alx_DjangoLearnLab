@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: social-media-api
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn social_media_api.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13
+      - key: DJANGO_SECRET_KEY
+        value: "django-insecure-ovnd+$6g)vx%1qqbzheqb@5$%aip&b4_k5+0&^((tl&%e0srv8"
+      - key: DATABASE_URL
+        value: "REPLACE_ME_WITH_RENDER_POSTGRES_URL"

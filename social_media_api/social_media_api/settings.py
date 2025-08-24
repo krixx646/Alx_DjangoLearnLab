@@ -20,12 +20,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ovnd+$6g)vx%1qqbzheqb@5$%aip&b4_k5+0&^((tl&%e0srv8'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-ovnd+$6g)vx%1qqbzheqb@5$%aip&b4_k5+0&^((tl&%e0srv8')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['your-app-name.herokuapp.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -76,14 +76,16 @@ TEMPLATES = [
 WSGI_APPLICATION = 'social_media_api.wsgi.application'
 
 
+
 # Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+# Use PostgreSQL on Render, fallback to SQLite locally
+import os
+import dj_database_url
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}'
+    )
 }
 
 
@@ -148,3 +150,16 @@ REST_FRAMEWORK = {
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Prevent cross-site scripting attacks
+SECURE_BROWSER_XSS_FILTER = True
+
+# Prevent MIME type sniffing
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Prevent your site from being embedded in iframes
+X_FRAME_OPTIONS = 'DENY'
+
+# Force HTTPS (you can enable this later after Heroku SSL setup)
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
