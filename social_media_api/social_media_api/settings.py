@@ -24,7 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-ovnd+$6g)vx%1qqbzheqb@5$%aip&b4_k5+0&^((tl&%e0srv8')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
+DEBUG = False
+if os.environ.get('DEBUG', 'False').lower() == 'true':
+    DEBUG = True
 
 # Hosts/CSRF configured for Render and local dev; can be overridden via env
 _default_allowed_hosts = ['localhost', '127.0.0.1', '.onrender.com']
